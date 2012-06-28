@@ -12,7 +12,7 @@ public class Command {
     public int[] State;
     public int FirstIndex;
     public int SecondIndex;
-    Instruction Type;
+    public Instruction Type;
     
     public Command(int [] state, int first, int second, Instruction type) {
         State = state.clone();

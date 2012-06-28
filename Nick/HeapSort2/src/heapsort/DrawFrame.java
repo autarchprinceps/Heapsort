@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
@@ -21,6 +22,9 @@ public class DrawFrame extends JFrame{
 	private JTextField tbAnzahl;
 	private DrawPanel panel;
 	private JTextField tbZahlen;
+	private int anzahl;
+	private ArrayList<Command> arCommand;
+	private ArrayList<Rectangle2D> arRechteck;
 	
 	
 	public static void main(String[] args){
@@ -59,24 +63,67 @@ public class DrawFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				double anzahl = Integer.parseInt(tbAnzahl.getText());
+				anzahl = Integer.parseInt(tbAnzahl.getText());
 				double pWidth = panel.getWidth();
 				double pHeight = panel.getHeight();
 				double widthRect = Math.round((pWidth - 10 * anzahl) / anzahl);
-				ArrayList<Rectangle2D> arRechteck = new ArrayList<Rectangle2D>();
+				
+				Heapsort heapsort = new Heapsort(anzahl, false);
+				arCommand = new ArrayList<Command>();
+				arCommand = heapsort.sort();
+				
+				arRechteck = new ArrayList<Rectangle2D>();
 				double tmpWidth = 0;
 				String zahlenLBL = "";
-				for(int i = 0; i < anzahl; i++){
-					double zahl = (Math.random() * 100 + 1);
-					zahlenLBL += "" + (int)Math.round(zahl) + "; ";
+				for(int j = 0; j < arCommand.get(0).State.length; j++){
+					int zahl = arCommand.get(0).State[j];
+					zahlenLBL += "" + zahl + "; ";
 					Rechteck tmpRect = new Rechteck(tmpWidth, pHeight - (zahl/100 * pHeight), widthRect, zahl/100 * pHeight, zahl);
 					arRechteck.add(tmpRect);
 					tmpWidth += widthRect + 10;
+					
 				}
+					
 				tbZahlen.setText(zahlenLBL);
 				panel.setArRect(arRechteck);
-				
 				repaint();
+				
+				
+			}
+		});
+		
+		
+		
+cmdStart.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				double pWidth = panel.getWidth();
+				double pHeight = panel.getHeight();
+				double widthRect = Math.round((pWidth - 10 * anzahl) / anzahl);
+				for(int i = 0; i < arCommand.size(); i++){
+					int tmpWidth = 0;
+					arRechteck.clear();
+					for(int j = 0; j < arCommand.get(i).State.length; j++){
+						double zahl = arCommand.get(i).State[j];
+						Rechteck tmpRect = new Rechteck(tmpWidth, pHeight - (zahl/100 * pHeight), widthRect, zahl/100 * pHeight, zahl);
+						arRechteck.add(tmpRect);
+						tmpWidth += widthRect + 10;
+//						repaint();
+//						panel.repaint(new Rectangle(0,0,(int)pWidth, (int)pHeight));
+						
+					}
+					panel.setArRect(arRechteck);
+					
+					repaint();
+					
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 		tbZahlen.setColumns(20);

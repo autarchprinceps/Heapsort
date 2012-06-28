@@ -10,7 +10,7 @@ package heapsort;
  * @author autarch
  */
 public enum Instruction {
-    ComparisonParent, ComparisonFlat, Swap, Finish;
+    ComparisonParent, ComparisonFlat, Swap, Finish, Init, End;
     
     @Override
     public String toString() {
@@ -23,6 +23,10 @@ public enum Instruction {
                 return "Swap";
             case Finish:
                 return "Finish";
+            case Init:
+                return "Init";
+            case End:
+                return "End";
             default:
                 return "*@#";
         }
