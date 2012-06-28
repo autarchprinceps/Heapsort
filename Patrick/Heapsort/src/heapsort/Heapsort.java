@@ -1,11 +1,12 @@
 package heapsort;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 public class Heapsort {
     public int[] content;
-    
+    public ArrayList<Command> orders;
     private Random r;
     
     public Heapsort(int n, boolean sorted) {
@@ -20,6 +21,8 @@ public class Heapsort {
                 content[i] = r.nextInt(3 * n) + 1;
             }
         }
+        orders = new ArrayList<Command>(n);
+        // TODO Draw initial
     }
     
     public long sort() {
@@ -32,6 +35,7 @@ public class Heapsort {
             start--;
         }
         while(end > 0) {
+            orders.add(new Command(content, end, 0, Instruction.Finish));
             swap(end, 0);
             end--;
             seep(0, end);
@@ -51,10 +55,13 @@ public class Heapsort {
         int tmp;
         int child = parent * 2 + 1;
         while(child <= end) {
+            orders.add(new Command(content, parent, child, Instruction.ComparisonParent));
             if(content[parent] < content[child]) {
                 tmp = child;
+                orders.add(new Command(content, tmp, child + 1, Instruction.ComparisonFlat));
             } else {
                 tmp = parent;
+                orders.add(new Command(content, tmp, child + 1, Instruction.ComparisonParent));
             }
             if((child + 1 <= end) && (content[tmp] < content[child + 1])) {
                 tmp = child + 1;
@@ -62,6 +69,7 @@ public class Heapsort {
             if(tmp == parent) {
                 break;
             } else {
+                 orders.add(new Command(content, tmp, parent, Instruction.Swap));
                 swap(parent, tmp);
                 parent = tmp;
             }
@@ -83,25 +91,16 @@ public class Heapsort {
     }
    
     public static void main(String[] args) {
-        Heapsort h = new Heapsort(10000000, false); //10000000
-        //System.out.println(h.toString());
+        Heapsort h = new Heapsort(5000, false); //10000000
         int[] i = h.content.clone();
         System.out.print("Java merge sort: ");
         long t = System.currentTimeMillis();
-        Arrays.sort(i); // Merge sort mit Insertion sort für card < 7
+        Arrays.sort(i);
         System.out.println(System.currentTimeMillis() - t);
         System.out.print("Patrick: ");
         System.out.println(h.sort());
-        //System.out.println(toString(i));
-        //System.out.println(h.toString());
         if(!Arrays.equals(i, h.content)) {
             System.out.println("Die Arrays sind verschieden!");
         }
-        System.out.print("Erwin: ");
-        erwin e = new erwin(10000000);
-        t = System.currentTimeMillis();
-        e.heapify();
-        e.sort();
-        System.out.println(System.currentTimeMillis() - t);
     }
 }
