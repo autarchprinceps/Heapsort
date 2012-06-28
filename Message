@@ -1,0 +1,6 @@
+inplace und kleiner als deins :P
+meins ist auch inplace
+ich habs mal mit 10 Mio elementen getestet:
+Java's merge sort mit allen finessen: 1200 ms sortiert 2400 ms random
+Mein heapsort, noch ohne optimierungen: 1450 ms " 2900 ms "
+Bei setlx waren es bei unter 100.000 doch schon mehr als 10 sec
