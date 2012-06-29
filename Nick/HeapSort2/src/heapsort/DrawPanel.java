@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 public class DrawPanel extends JPanel{
 	private int height;
 	private int width;
-	private ArrayList<Rectangle2D> arRect = new ArrayList<Rectangle2D>();
+	private ArrayList<Rechteck> arRect = new ArrayList<Rechteck>();
 	
 	public DrawPanel(int width, int height){
 		this.width = width;
@@ -23,12 +23,18 @@ public class DrawPanel extends JPanel{
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.white);
 		g2.fillRect(0, 0, 700, 600);
-		g2.setColor(Color.black);
+		//g2.setColor(Color.black);
 		for(int i = 0; i < arRect.size(); i++){
-			g2.draw(arRect.get(i));
+			g2.setColor(arRect.get(i).getColor());
+			if(g2.getColor() == Color.red){
+				g2.fill(arRect.get(i));
+			}else{
+				g2.draw(arRect.get(i));
+			}
+//			System.out.println(g2.getColor());
 			
 		}
-		System.out.println(arRect.size());
+//		System.out.println(arRect.size());
 //		try {
 //			Thread.sleep(100);
 //		} catch (InterruptedException e) {
@@ -37,10 +43,10 @@ public class DrawPanel extends JPanel{
 //		}
 	}
 	
-	public void setArRect(ArrayList<Rectangle2D> arRect){
+	public void setArRect(ArrayList<Rechteck> arRect){
 //		this.arRect.clear();
 		
 		this.arRect = arRect;
-		System.out.println(arRect.size());
+//		System.out.println(arRect.size());
 	}
 }

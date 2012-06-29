@@ -5,15 +5,15 @@ import java.awt.geom.Rectangle2D;
 
 public class Rechteck extends Rectangle2D{
 	
-	private double x;
-	private double y;
-	private double width;
-	private double height;
-	private double value;
+	private int x;
+	private int y;
+	private int width;
+	private int height;
+	private int value;
 	private Color color;
 	
 	
-	public Rechteck(double x, double y, double w, double h, double value){
+	public Rechteck(int x, int y, int w, int h, int value){
 		this.x = x;
 		this.y = y;
 		this.width = w;
@@ -76,11 +76,21 @@ public class Rechteck extends Rectangle2D{
 	public void setColor(Color color){
 		this.color = color;
 	}
+	
+	public Color getColor(){
+		return color;
+	}
 
 	@Override
 	public boolean isEmpty() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Override
+	public String toString(){
+		return "value: " + value;
+		
 	}
 
 }
