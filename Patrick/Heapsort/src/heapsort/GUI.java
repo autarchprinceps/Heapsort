@@ -1,22 +1,22 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package heapsort;
+
+import java.util.ArrayList;
 
 /**
  *
  * @author autarch
  */
 public class GUI extends javax.swing.JFrame {
-
     /**
-     * Creates new form GUI
+     *
      */
     public GUI() {
         initComponents();
     }
 
+    Heapsort h;
+    ArrayList<Command> com;
+    Integer pos;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,41 +26,54 @@ public class GUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        sizeField = new javax.swing.JTextField();
+        submitButton = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        HeapView = new javax.swing.JPanel();
+        heapView1 = new heapsort.HeapView();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Submit");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        submitButton.setText("Submit");
+        submitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                submitButtonActionPerformed(evt);
+            }
+        });
+
+        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider1StateChanged(evt);
             }
         });
 
         jButton2.setText("Step");
-
-        jButton3.setText("Back");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Start");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Stop");
 
-        javax.swing.GroupLayout HeapViewLayout = new javax.swing.GroupLayout(HeapView);
-        HeapView.setLayout(HeapViewLayout);
-        HeapViewLayout.setHorizontalGroup(
-            HeapViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout heapView1Layout = new javax.swing.GroupLayout(heapView1);
+        heapView1.setLayout(heapView1Layout);
+        heapView1Layout.setHorizontalGroup(
+            heapView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        HeapViewLayout.setVerticalGroup(
-            HeapViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 461, Short.MAX_VALUE)
+        heapView1Layout.setVerticalGroup(
+            heapView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 463, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -70,13 +83,11 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(heapView1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(HeapView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sizeField, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
+                        .addComponent(submitButton)
                         .addGap(18, 18, 18)
                         .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -85,9 +96,7 @@ public class GUI extends javax.swing.JFrame {
                         .addComponent(jButton5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
-                        .addGap(0, 180, Short.MAX_VALUE)))
+                        .addGap(0, 228, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -97,24 +106,59 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton2)
-                        .addComponent(jButton3)
                         .addComponent(jButton4)
                         .addComponent(jButton5))
                     .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1)))
+                        .addComponent(sizeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(submitButton)))
                 .addGap(18, 18, 18)
-                .addComponent(HeapView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(heapView1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+        if(run != null) {
+            run.interrupt();
+            run = null;
+        }
+        h = new Heapsort(Integer.parseInt(sizeField.getText()), false);
+        com = h.sort();
+        pos = 0;
+        heapView1.sendToAnimation(com.get(pos), pos);
+    }//GEN-LAST:event_submitButtonActionPerformed
+
+    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
+        heapView1.wait = 3000 - (jSlider1.getValue() * 28);
+    }//GEN-LAST:event_jSlider1StateChanged
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if(pos < com.size()) {
+            new Thread() {
+                @Override
+                public void run() {
+                    heapView1.sendToAnimation(com.get(pos), pos);
+                }
+            }.start();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+    Thread run;
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        if(run == null) {
+            run = new Thread() {
+                @Override
+                public void run() {
+                    while(pos < com.size()) {
+                        heapView1.sendToAnimation(com.get(pos), pos);
+                    }
+                }
+            };
+        }
+        run.start();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -151,20 +195,29 @@ public class GUI extends javax.swing.JFrame {
          * Create and display the form
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
+            @Override
             public void run() {
                 new GUI().setVisible(true);
+                /*Heapsort h = new Heapsort(100, false);
+                int[] i = h.content.clone();
+                h.sort();
+                System.out.println(h.toString());
+                //Arrays.sort(i);
+                /*for(int a = 0; a < i.length; a++) {
+                    if(i[a] != h.content[a]) {
+                        System.out.print("shit " + a + " ");
+                    }
+                }*/
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel HeapView;
-    private javax.swing.JButton jButton1;
+    private heapsort.HeapView heapView1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JSlider jSlider1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField sizeField;
+    private javax.swing.JButton submitButton;
     // End of variables declaration//GEN-END:variables
 }

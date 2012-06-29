@@ -1,14 +1,28 @@
 package heapsort;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
+/**
+ *
+ * @author autarch
+ */
 public class Heapsort {
+    /**
+     *
+     */
     public int[] content;
+    /**
+     *
+     */
     public ArrayList<Command> orders;
     private Random r;
-    
+
+    /**
+     *
+     * @param n length of Array
+     * @param sorted
+     */
     public Heapsort(int n, boolean sorted) {
         content = new int[n];
         if(sorted) {
@@ -22,12 +36,14 @@ public class Heapsort {
             }
         }
         orders = new ArrayList<Command>(n);
-        // TODO Draw initial
+        orders.add(new Command(content, 0, n - 1, Instruction.Init));
     }
-    
-    public long sort() {
-        long t = System.currentTimeMillis();
-        
+
+    /**
+     *
+     * @return backtrace command list
+     */
+    public ArrayList<Command> sort() {
         int start = (content.length - 2) / 2;
         int end = content.length - 1;
         while(start >= 0) {
@@ -35,21 +51,21 @@ public class Heapsort {
             start--;
         }
         while(end > 0) {
-            orders.add(new Command(content, end, 0, Instruction.Finish));
             swap(end, 0);
+            orders.add(new Command(content, end, 0, Instruction.Finish));
             end--;
             seep(0, end);
         }
-        
-        return System.currentTimeMillis() - t;
+        orders.add(new Command(content, 0, content.length - 1, Instruction.End));
+        return orders;
     }
-    
+
     private void swap(int a, int b) {
         int tmp = content[a];
         content[a] = content[b];
         content[b] = tmp;
     }
-    
+
     private void seep(int start, int end) {
         int parent = start;
         int tmp;
@@ -69,8 +85,8 @@ public class Heapsort {
             if(tmp == parent) {
                 break;
             } else {
-                 orders.add(new Command(content, tmp, parent, Instruction.Swap));
                 swap(parent, tmp);
+                orders.add(new Command(content, tmp, parent, Instruction.Swap));
                 parent = tmp;
             }
             child = parent * 2 + 1;
@@ -81,26 +97,17 @@ public class Heapsort {
     public String toString() {
         return toString(content);
     }
-    
+
+    /**
+     *
+     * @param arr
+     * @return
+     */
     public static String toString(int[] arr) {
         String result = "";
         for(int i = 0; i < arr.length; i++) {
             result += arr[i] + "\t";
         }
         return result;
-    }
-   
-    public static void main(String[] args) {
-        Heapsort h = new Heapsort(5000, false); //10000000
-        int[] i = h.content.clone();
-        System.out.print("Java merge sort: ");
-        long t = System.currentTimeMillis();
-        Arrays.sort(i);
-        System.out.println(System.currentTimeMillis() - t);
-        System.out.print("Patrick: ");
-        System.out.println(h.sort());
-        if(!Arrays.equals(i, h.content)) {
-            System.out.println("Die Arrays sind verschieden!");
-        }
     }
 }
