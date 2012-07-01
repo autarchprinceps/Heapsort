@@ -21,19 +21,19 @@ public class HeapView extends javax.swing.JPanel {
     Color firstC;
     Color secondC;
     public int wait;
+    public int finished;
     /**
      *
      */
     public HeapView() {
-        //content = new int[45];//new Heapsort(45, false).content;
         this.setDoubleBuffered(true);
         wait = 1000;
+        finished = 0;
         initComponents();
     }
 
-    public synchronized void sendToAnimation(Command c, Integer pos) {
-        pos++;
-        System.out.println(pos);
+    public synchronized void sendToAnimation(Command c, Wrap pos) {
+        pos.setI(pos.getI() + 1);
         switch(c.Type) {
             case ComparisonFlat:
                 first = c.FirstIndex;
@@ -109,6 +109,7 @@ public class HeapView extends javax.swing.JPanel {
                 } catch(InterruptedException ex) {
                     Logger.getLogger(HeapView.class.getName()).log(Level.WARNING, null, ex);
                 }
+                finished++;
                 first = -1;
                 second = -1;
                 content = c.State;
@@ -149,7 +150,7 @@ public class HeapView extends javax.swing.JPanel {
 
     int calcMaxTier() {
         int result = 0;
-        int length = content.length;
+        int length = content.length - finished;
         while(true) {
             length -= (int)StrictMath.round(StrictMath.pow(2, result));
             result++;
@@ -172,6 +173,9 @@ public class HeapView extends javax.swing.JPanel {
             g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            if(content.length - finished <= 1) {
+                return;
+            }
             int max = calcMaxTier();
             int yoffset = (this.getHeight() - 30) / (max - 1);
             for(int tier = 1; tier <= max; tier++) {
@@ -181,7 +185,7 @@ public class HeapView extends javax.swing.JPanel {
                 for(int slot = 1; slot <= count; slot++) {
                     int middlePosition = slot * offset;
                     int index = count - 2 + slot;
-                    if(index >= content.length) {
+                    if(index >= content.length - finished) {
                         break;
                     }
                     if(index > 0) {

@@ -12,11 +12,12 @@ public class GUI extends javax.swing.JFrame {
      */
     public GUI() {
         initComponents();
+        pos = new Wrap();
     }
 
     Heapsort h;
     ArrayList<Command> com;
-    Integer pos;
+    Wrap pos;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -64,6 +65,11 @@ public class GUI extends javax.swing.JFrame {
         });
 
         jButton5.setText("Stop");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout heapView1Layout = new javax.swing.GroupLayout(heapView1);
         heapView1.setLayout(heapView1Layout);
@@ -122,13 +128,14 @@ public class GUI extends javax.swing.JFrame {
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         if(run != null) {
-            run.interrupt();
+            run.suspend();
             run = null;
         }
         h = new Heapsort(Integer.parseInt(sizeField.getText()), false);
+        heapView1.wait = 3000 - (jSlider1.getValue() * 28);
         com = h.sort();
-        pos = 0;
-        heapView1.sendToAnimation(com.get(pos), pos);
+        pos.setI(0);
+        heapView1.sendToAnimation(com.get(pos.getI()), pos);
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
@@ -136,11 +143,11 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(pos < com.size()) {
+        if(pos.getI() < com.size()) {
             new Thread() {
                 @Override
                 public void run() {
-                    heapView1.sendToAnimation(com.get(pos), pos);
+                    heapView1.sendToAnimation(com.get(pos.getI()), pos);
                 }
             }.start();
         }
@@ -151,14 +158,23 @@ public class GUI extends javax.swing.JFrame {
             run = new Thread() {
                 @Override
                 public void run() {
-                    while(pos < com.size()) {
-                        heapView1.sendToAnimation(com.get(pos), pos);
+                    while(pos.getI() < com.size()) {
+                        heapView1.sendToAnimation(com.get(pos.getI()), pos);
                     }
                 }
             };
+            run.start();
+        } else {
+            run.resume();
         }
-        run.start();
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        if(run != null) {
+            run.suspend();
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments

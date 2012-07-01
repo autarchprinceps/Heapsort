@@ -10,29 +10,11 @@ package heapsort;
  * @author autarch
  */
 public enum Instruction {
-    /**
-     *
-     */
     ComparisonParent,
-    /**
-     *
-     */
     ComparisonFlat,
-    /**
-     *
-     */
     Swap,
-    /**
-     *
-     */
     Finish,
-    /**
-     *
-     */
     Init,
-    /**
-     *
-     */
     End;
 
     @Override
