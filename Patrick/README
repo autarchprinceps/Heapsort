@@ -1,0 +1,24 @@
+Heapsort
+
+Animiert den Algorithmus Heapsort in einem Balkendiagramm (näher am tatsächlichen Speicher) und in einer Heap-/Treeansicht (näher am Konzept).
+
+Gelb:
+	Parent beim Vergleich
+Blau:
+	Child beim Vergleich
+Rot:
+	interner Tausch
+Magenta:
+	finaler Tausch von fertig sortiertem (entspricht Entfernung aus dem Heap)
+Dunkelgrau gefüllte Balken:
+	bereits sortierte Balken
+
+
+
+Bedienung:
+	Das Textfeld dient zur Angabe der Elementenanzahl, die mit Submit initialisiert werden.
+	Start started den Thread, der schrittweise durch die Schritte geht.
+	Stop pausiert jenen Thread.
+	Der Slider dient dabei der Festlegung der Geschwindigkeit.
+	Step führt nur den jeweils nächsten Step aus.
+	Forward legt die Richtung der Ausführung fest
