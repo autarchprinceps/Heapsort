@@ -1,18 +1,17 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package heapsort;
 
 
 /**
  *
- * @author Patrick Robinson, Nick Herrmannsdörfer, Erwin Stamm
+ * @author autarch
  */
 public enum Instruction {
-    ComparisonParent,
-    ComparisonFlat,
-    Swap,
-    Finish,
-    Init,
-    End;
-
+    ComparisonParent, ComparisonFlat, Swap, Finish, Init, End;
+    
     @Override
     public String toString() {
         switch(this) {

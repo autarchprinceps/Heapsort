@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import javax.swing.JPanel;
 
 /**
  *
@@ -18,80 +17,53 @@ public class ArrayView extends javax.swing.JPanel {
         initComponents();
         this.setDoubleBuffered(true);
     }
-
-    private boolean swap = false;
-    private boolean comparisonParent = false;
-    private boolean comparisonFlat = false;
-    private boolean finish = false;
-    private boolean end = false;
-    private int counterFinish = 0;
-    private int firstIndex = -1;
-    private int secondIndex = -1;
-    private boolean firstLoop = false;
-    private int[] arState;
-    private int max;
-
-    public void drawState(int i, int tmpWidth, Command command, Command commandNext, int widthRect, int max, boolean bool) {
-        arState = command.State.clone();
-        this.max = max;
-        for (int j = 0; j < command.State.length; j++) {
-            if(bool == true){
-                if(firstLoop == false){
-                    if(!(command.Type.toString().equals("End"))){
-                        if (commandNext.Type.toString().equals("Swap")) {
-                                swap = true;
-                                firstIndex = commandNext.FirstIndex;
-                                secondIndex = commandNext.SecondIndex;
-                                firstLoop = true;
-                        }
-                        if (commandNext.Type.toString().equals("ComparisonParent")) {
-                                comparisonParent = true;
-                                firstIndex = commandNext.FirstIndex;
-                                secondIndex = commandNext.SecondIndex;
-                                firstLoop = true;
-                        }
-                        if (commandNext.Type.toString().equals("ComparisonFlat")) {
-                                comparisonFlat = true;
-                                firstIndex = commandNext.FirstIndex;
-                                secondIndex = commandNext.SecondIndex;
-                                firstLoop = true;
-                        }
-                        if (commandNext.Type.toString().equals("Finish")) {
-                                finish = true;
-                                firstIndex = commandNext.FirstIndex;
-                                secondIndex = commandNext.SecondIndex;
-                                firstLoop = true;
-                                counterFinish++;
-                        }
-                    }else{
-                        end = true;
-                    }
-                }
-            }
-        }
-    }
+    public int counterFinish = 0;
+    public int firstIndex = -1;
+    public int secondIndex = -1;
+    public int[] arState;
+    public int max;
+    public boolean bool;
+    public Color firstC;
+    public Color secondC;
 
     @Override
-    public void paint(Graphics g){
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            g2.setColor(Color.white);
-            g2.fillRect(0, 0, this.getWidth(), this.getHeight());
+    public void paint(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2.setColor(Color.white);
+        g2.clearRect(0, 0, this.getWidth(), this.getHeight());
 
-            int tmpWidth = 0;
-            try{
-                    for(int i = 0; i < arState.length; i++){
-                            int widthRect = Math.round((this.getWidth() - 10 * arState.length) / arState.length);
-                            int zahl = arState[i];
-                            g2.drawRect(tmpWidth, Math.round(this.getHeight() - 10 - (((this.getHeight() - 10) / max) * zahl)), widthRect,
-                                            Math.round((this.getHeight() / max) * zahl));
-                            tmpWidth += widthRect + 10;
-                    }
-            }catch(NullPointerException e){
+        if(arState != null) {
+            double widthRect = this.getWidth() * 1.0 / (2 * arState.length);
+            double tmpWidth = widthRect;
+            double tmpHeight = (this.getHeight() * 1.0 - 10) / max;
+            for(int i = 0; i < arState.length; i++) {
+                if(i == firstIndex) {
+                    g2.setColor(firstC);
+                } else if(i == secondIndex) {
+                    g2.setColor(secondC);
+                } else {
+                    g2.setColor(Color.black);
+                }
+                if(i >= arState.length - counterFinish) {
+                    g2.setColor(Color.darkGray);
+                }
+
+                int zahl = arState[i];
+                if(g2.getColor() != Color.black) {
+                    g2.fillRect((int)Math.floor(tmpWidth), (int)Math.floor(this.getHeight() - 10 - tmpHeight * zahl),
+                            (int)Math.floor(widthRect), (int)Math.floor(tmpHeight * zahl));
+                } else {
+                    g2.drawRect((int)Math.floor(tmpWidth), (int)Math.floor(this.getHeight() - 10 - tmpHeight * zahl),
+                            (int)Math.floor(widthRect), (int)Math.floor(tmpHeight * zahl));
+                }
+
+                tmpWidth += 2 * widthRect;
             }
+        }
     }
 
     /**

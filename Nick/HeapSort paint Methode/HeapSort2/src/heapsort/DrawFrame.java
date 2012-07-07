@@ -28,6 +28,7 @@ public class DrawFrame extends JFrame {
 	private int anzahl;
 	private ArrayList<Command> arCommand;
 	private ArrayList<Rechteck> arRechteck;
+	private int counterFinish = 0;
 	private int counterCommand = 0;
 	private int counterState = 0;
 	private ThreadPaint threadPaint = new ThreadPaint();
@@ -67,13 +68,16 @@ public class DrawFrame extends JFrame {
 		cmdStop.setText("Stop");
 		JButton cmdReset = new JButton();
 		cmdReset.setText("Reset");
+		JButton cmdBreite = new JButton();
+		cmdBreite.setText("Breiter");
 		pButtons.add(tbAnzahl);
 		pButtons.add(cmdAnzahl);
 		pButtons.add(cmdStart);
 		pButtons.add(cmdStop);
 		pButtons.add(cmdReset);
+		pButtons.add(cmdBreite);
 		pButtons.add(sliderGeschwindigkeit);
-		geschwindigkeit = sliderGeschwindigkeit.getValue();
+//		geschwindigkeit = sliderGeschwindigkeit.getValue();
 		tbZahlen = new JTextField();
 		tbZahlen.setColumns(20);
 		
@@ -103,14 +107,15 @@ public class DrawFrame extends JFrame {
 				int[] arInt = arCommand.get(0).State.clone();
 				Arrays.sort(arInt);
 				int max = arInt[arInt.length - 1];
-				for (int j = 0; j < arCommand.get(0).State.length; j++) {
-					int zahl = arCommand.get(0).State[j];
-					zahlenLBL += "" + zahl + "; ";
-					Rechteck tmpRect = new Rechteck(tmpWidth, Math.round((pHeight - 10) - (((pHeight - 10) / max) * zahl)),
-													widthRect, Math.round((pHeight / max) * zahl), zahl);
-					arRechteck.add(tmpRect);
-					tmpWidth += widthRect + 10;
-				}
+				panel.drawState(0, tmpWidth, arCommand.get(0), arCommand.get(0 + 1), widthRect, max, false);
+//				for (int j = 0; j < arCommand.get(0).State.length; j++) {
+//					int zahl = arCommand.get(0).State[j];
+//					zahlenLBL += "" + zahl + "; ";
+//					Rechteck tmpRect = new Rechteck(tmpWidth, Math.round((pHeight - 10) - (((pHeight - 10) / max) * zahl)),
+//													widthRect, Math.round((pHeight / max) * zahl), zahl);
+//					arRechteck.add(tmpRect);
+//					tmpWidth += widthRect + 10;
+//				}
 
 				tbZahlen.setText(zahlenLBL);
 				panel.setArRect(arRechteck);
@@ -144,94 +149,21 @@ public class DrawFrame extends JFrame {
 
 			}
 		});
+		
+		cmdBreite.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				panel.setSize(panel.getWidth() + 50, panel.getHeight());
+				
+			}
+		});
 
 		// int anzahl = Integer.parseInt(tbAnzahl.getText());
 
 	}
 
-	public void drawState(int i, int tmpWidth, int pHeight,int widthRect, int max, boolean bool) {
-
-		boolean swap = false;
-		boolean comparisonParent = false;
-		boolean comparisonFlat = false;
-		boolean finish = false;
-		int first = -1;
-		int second = -1;
-		arRechteck.clear();
-		for (int j = 0; j < arCommand.get(i).State.length; j++) {
-			
-			if(bool == true){
-				if(!(arCommand.get(i).Type.toString().equals("End"))){
-					if (arCommand.get(i + 1).Type.toString().equals("Swap")) {
-						swap = true;
-						first = arCommand.get(i + 1).FirstIndex;
-						second = arCommand.get(i + 1).SecondIndex;
-					}
-					if (arCommand.get(i + 1).Type.toString().equals("ComparisonParent")) {
-						comparisonParent = true;
-						first = arCommand.get(i + 1).FirstIndex;
-						second = arCommand.get(i + 1).SecondIndex;
-					}
-					if (arCommand.get(i + 1).Type.toString().equals("ComparisonFlat")) {
-						comparisonFlat = true;
-						first = arCommand.get(i + 1).FirstIndex;
-						second = arCommand.get(i + 1).SecondIndex;
-					}
-					if (arCommand.get(i + 1).Type.toString().equals("Finish")) {
-						finish = true;
-						first = arCommand.get(i + 1).FirstIndex;
-						second = arCommand.get(i + 1).SecondIndex;
-					}
-				}
-			}
-			
-			int zahl = arCommand.get(i).State[j];
-			Rechteck tmpRect = new Rechteck(tmpWidth, Math.round(pHeight - 10 - (((pHeight - 10) / max) * zahl)), widthRect,
-					Math.round((pHeight / max) * zahl), zahl);
-			if(bool == true){
-				if (swap == true) {
-					if (j == first) {
-						tmpRect.setColor(Color.red);
-					}
-					if (j == second) {
-						tmpRect.setColor(Color.red);
-					}
-				}
-				if (comparisonParent == true) {
-					if (j == first) {
-						tmpRect.setColor(Color.orange);
-					}
-					if (j == second) {
-						tmpRect.setColor(Color.blue);
-					}
-				}
-				if (comparisonFlat == true) {
-					if (j == first) {
-						tmpRect.setColor(Color.blue);
-					}
-					if (j == second) {
-						tmpRect.setColor(Color.blue);
-					}
-				}
-				if (finish == true) {
-					if (j == first) {
-						tmpRect.setColor(Color.magenta);
-					}
-					if (j == second) {
-						tmpRect.setColor(Color.magenta);
-					}
-				}
-			}else{
-				tmpRect.setColor(Color.black);
-			}
-			
-			arRechteck.add(tmpRect);
-			tmpWidth += widthRect + 10;
-			counterState++;
-
-		}
-
-	}
+	
 
 	public ArrayList<Rechteck> getArRechteck() {
 		return arRechteck;
@@ -246,15 +178,20 @@ public class DrawFrame extends JFrame {
 			boolean bool;
 
 			for (int i = 0; i < arCommand.size(); i++) {
-				
+				pWidth = panel.getWidth();
+				pHeight = panel.getHeight();
 				bool = false;
 				int tmpWidth = 0;
 				arRechteck.clear();
 				int[] arInt = arCommand.get(i).State.clone();
 				Arrays.sort(arInt);
 				int max = arInt[arInt.length - 1];
-
-				drawState(i, tmpWidth, pHeight, widthRect, max, bool);
+				try{
+					panel.drawState(i, tmpWidth, arCommand.get(i), arCommand.get(i + 1), widthRect, max, bool);
+				}catch(IndexOutOfBoundsException e){
+					
+				}
+				
 				panel.setArRect(arRechteck);
 				panel.repaint();
 				try {
@@ -264,7 +201,11 @@ public class DrawFrame extends JFrame {
 					e1.printStackTrace();
 				}
 				bool = true;
-				drawState(i, tmpWidth, pHeight, widthRect, max, bool);
+				try{
+					panel.drawState(i, tmpWidth, arCommand.get(i), arCommand.get(i + 1), widthRect, max, bool);
+				}catch(IndexOutOfBoundsException e){
+					
+				}
 				panel.setArRect(arRechteck);
 				panel.repaint();
 				try {
@@ -274,7 +215,7 @@ public class DrawFrame extends JFrame {
 					e1.printStackTrace();
 				}
 				
-				System.out.println(arCommand.get(i));
+//				System.out.println(arCommand.get(i));
 				counterCommand++;
 				
 

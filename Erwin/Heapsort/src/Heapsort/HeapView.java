@@ -25,7 +25,7 @@ public class HeapView extends javax.swing.JPanel {
         this.setDoubleBuffered(true);
         wait = 1000;
         finished = 0;
-        animated = 0;
+        animated =0;
         initComponents();
     }
 
@@ -115,10 +115,22 @@ public class HeapView extends javax.swing.JPanel {
                 secondC = Color.magenta;
                 repaint();
                 try {
-                    Thread.sleep(wait);
+                    Thread.sleep(wait/50);
                 } catch(InterruptedException ex) {
                     Logger.getLogger(HeapView.class.getName()).log(Level.WARNING, null, ex);
                 }
+                
+                for(animated = 0 ; animated < 48 ; animated++)
+                {
+                	repaint();
+                	try {
+                        Thread.sleep(wait/50);
+                    } catch(InterruptedException ex) {
+                        Logger.getLogger(HeapView.class.getName()).log(Level.WARNING, null, ex);
+                    }
+                }
+                animated=0;
+                
                 finished++;
                 first = -1;
                 second = -1;
@@ -194,9 +206,9 @@ public class HeapView extends javax.swing.JPanel {
             int p_n=0;
             int x2=0;
             int y2=0;
-            double ẞ =0.0;//offizieler Deutscherbuchstabe
             int max = calcMaxTier();
             int yoffset = (this.getHeight() - 30) / (max - 1);
+            double rate=0.0;
         	boolean p_toggle = true;
             for(int tier = 1; tier <= max; tier++) {
                 int count = (int)StrictMath.round(StrictMath.pow(2, tier - 1));
@@ -209,22 +221,23 @@ public class HeapView extends javax.swing.JPanel {
                         break;
                     }
                     if(index > 0) {
-                        x2 = ((slot + 1) / 2) * (this.getWidth() / (count / 2 + 1));
-                        y2 = (10 + yoffset * (tier - 2));
-                        xVec=x2 - middlePosition;
-                        yVec=y2 - ypos;
-                        			ẞ= 1.0*yVec/xVec;
-                        xVec = (int) StrictMath.sqrt((225 - Math.pow(((100/ẞ)),2)));
-                        yVec =(int) (225 - StrictMath.pow(xVec,2));
-            			System.out.println(xVec);
-            			if(ẞ<0)
-            			{
-            				g2.drawLine(middlePosition + xVec, ypos-yVec, x2 - xVec, y2+yVec);
-            			}
-            			else
-            			{
-            				g2.drawLine(middlePosition-xVec, ypos-yVec, x2+xVec, y2+yVec);
-            			}
+                        x2 = ((slot +1) / 2) * (this.getWidth() / (count / 2 +1)) ;
+                        y2 = (15 + yoffset * (tier - 2));
+                        xVec=StrictMath.abs(x2 - middlePosition);
+                        yVec=StrictMath.abs(y2 - ypos);
+                        rate = (1.0* xVec)/(xVec+yVec);
+                        xVec = (int) StrictMath.floor(StrictMath.sqrt(rate * 225));
+                        yVec = (int) StrictMath.floor(StrictMath.sqrt((1-rate) * 225));
+                        System.out.println(xVec+" x|y "+ yVec + " r "+rate);
+                        if(slot%2==0)
+                        {
+                        	g2.drawLine(x2 + xVec , y2 + yVec, middlePosition - xVec+4, ypos - yVec);
+                        }
+                        else
+                        {
+                        	g2.drawLine(x2 - xVec , y2 + yVec, middlePosition + xVec-4, ypos - yVec);
+                        }
+                        
                         xVec=0;
                         yVec=0;
                     }
@@ -233,7 +246,7 @@ public class HeapView extends javax.swing.JPanel {
                     } else if(index == second) {
                         g2.setColor(secondC);
                     }
-                    if(g2.getColor()==Color.red)
+                    if(g2.getColor()==Color.red || g2.getColor()==Color.magenta)
                     {          	
                     	if(p_toggle)
                     	{
@@ -243,13 +256,15 @@ public class HeapView extends javax.swing.JPanel {
                     		p_toggle =false;
                     	}
                     	else{
-                    		xVec=(int)((x2 - middlePosition) * ( animated / 50.0));
-                        	yVec=(int)((y2 - ypos) * ( animated / 50.0));//x2 & y2 ->parents
-                        	g2.fillOval((p_x - radius)- xVec, (p_y  - radius)-yVec, radius * 2, radius * 2);
+                    		xVec=(int)((p_x - middlePosition) * ( animated / 50.0));
+                        	yVec=(int)((p_y - ypos) * ( animated / 50.0));//x2 & y2 ->parents
+                        	if(g2.getColor()!=Color.magenta)
+                        		g2.fillOval((p_x - radius)- xVec, (p_y  - radius)-yVec, radius * 2, radius * 2);
                         	g2.fillOval((middlePosition - radius)+ xVec, (ypos  - radius)+yVec, radius * 2, radius * 2);
-                        	g2.setColor(Color.white);
-                        	g2.drawString("" + content[index], middlePosition+ xVec - 10, ypos+ yVec + 5);
-                        	g2.drawString("" + p_n, p_x- xVec - 10, p_y- yVec + 5);
+                        	if(g2.getColor()!=Color.magenta)	
+                        		g2.drawString("" + p_n, p_x- xVec - 10, p_y- yVec + 5);
+                    		g2.setColor(Color.white);
+                    		g2.drawString("" + content[index], middlePosition+ xVec - 10, ypos+ yVec + 5);
                         	p_toggle=true;
                     	}             		
                         xVec=0;

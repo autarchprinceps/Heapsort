@@ -1,23 +1,23 @@
 package heapsort;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author autarch
+ * @author Patrick Robinson, Nick Herrmannsdörfer, Erwin Stamm
  */
 public class GUI extends javax.swing.JFrame {
-    /**
-     *
-     */
     public GUI() {
         initComponents();
-        pos = new Wrap();
+        heapView1.adjacentArrayView = rectPanel;
     }
 
     Heapsort h;
     ArrayList<Command> com;
     Wrap pos;
+    int maxValue;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,6 +34,8 @@ public class GUI extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         heapView1 = new heapsort.HeapView();
+        rectPanel = new heapsort.ArrayView();
+        forwardBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,18 +81,33 @@ public class GUI extends javax.swing.JFrame {
         );
         heapView1Layout.setVerticalGroup(
             heapView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 463, Short.MAX_VALUE)
+            .addGap(0, 219, Short.MAX_VALUE)
         );
+
+        javax.swing.GroupLayout rectPanelLayout = new javax.swing.GroupLayout(rectPanel);
+        rectPanel.setLayout(rectPanelLayout);
+        rectPanelLayout.setHorizontalGroup(
+            rectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        rectPanelLayout.setVerticalGroup(
+            rectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 238, Short.MAX_VALUE)
+        );
+
+        forwardBox.setSelected(true);
+        forwardBox.setText("Forward");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(heapView1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(rectPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(heapView1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(sizeField, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(submitButton)
@@ -102,7 +119,9 @@ public class GUI extends javax.swing.JFrame {
                         .addComponent(jButton5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
-                        .addGap(0, 228, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(forwardBox)
+                        .addGap(0, 143, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -113,12 +132,15 @@ public class GUI extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton2)
                         .addComponent(jButton4)
-                        .addComponent(jButton5))
+                        .addComponent(jButton5)
+                        .addComponent(forwardBox))
                     .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(sizeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(submitButton)))
                 .addGap(18, 18, 18)
+                .addComponent(rectPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(heapView1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -127,53 +149,110 @@ public class GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        if(run != null) {
-            run.suspend();
-            run = null;
-        }
+        run = null;
+        pos = new Wrap();
+        running = false;
+        once = false;
         h = new Heapsort(Integer.parseInt(sizeField.getText()), false);
-        heapView1.wait = 3000 - (jSlider1.getValue() * 28);
+        if(jSlider1.getValue() < 98) {
+            heapView1.wait = 1000 - (jSlider1.getValue() * 10);
+        } else {
+            heapView1.wait = 50;
+        }
         com = h.sort();
+        maxValue = h.content[h.content.length - 1];
+        heapView1.maxValue = maxValue;
+        heapView1.finished = 0;
+        heapView1.adjacentArrayView.counterFinish = 0;
+        rectPanel.max = maxValue;
         pos.setI(0);
-        heapView1.sendToAnimation(com.get(pos.getI()), pos);
+        if(pos.getI() == 0) {
+            heapView1.sendToAnimation(com.get(pos.getI()), null, pos, forwardBox.isSelected());
+        } else {
+            heapView1.sendToAnimation(com.get(pos.getI()), com.get(pos.getI() - 1), pos, forwardBox.isSelected());
+        }
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
-        heapView1.wait = 3000 - (jSlider1.getValue() * 28);
+        if(jSlider1.getValue() < 98) {
+            heapView1.wait = 1000 - (jSlider1.getValue() * 10);
+        } else {
+            heapView1.wait = 50;
+        }
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(pos.getI() < com.size()) {
-            new Thread() {
+         if(run == null) {
+            run = new Thread() {
                 @Override
                 public void run() {
-                    heapView1.sendToAnimation(com.get(pos.getI()), pos);
+                    while(pos.getI() < com.size()) {
+                        if(running) {
+                            if(pos.getI() == 0) {
+                                heapView1.sendToAnimation(com.get(pos.getI()), null, pos, forwardBox.isSelected());
+                            } else {
+                                heapView1.sendToAnimation(com.get(pos.getI()), com.get(pos.getI() - 1), pos, forwardBox.isSelected());
+                            }
+                            if(once) {
+                                once = false;
+                                running = false;
+                            }
+                        } else {
+                            try {
+                                Thread.sleep(100);
+                            } catch(InterruptedException ex) {
+                                Logger.getLogger(GUI.class.getName()).log(Level.WARNING, null, ex);
+                            }
+                        }
+                    }
                 }
-            }.start();
+            };
+            once = true;
+            running = true;
+            run.start();
+        } else {
+            once = true;
+            running = true;
         }
     }//GEN-LAST:event_jButton2ActionPerformed
     Thread run;
+    boolean running = false;
+    boolean once = false;
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         if(run == null) {
             run = new Thread() {
                 @Override
                 public void run() {
                     while(pos.getI() < com.size()) {
-                        heapView1.sendToAnimation(com.get(pos.getI()), pos);
+                        if(running) {
+                            if(pos.getI() == 0) {
+                                heapView1.sendToAnimation(com.get(pos.getI()), null, pos, forwardBox.isSelected());
+                            } else {
+                                heapView1.sendToAnimation(com.get(pos.getI()), com.get(pos.getI() - 1), pos, forwardBox.isSelected());
+                            }
+                            if(once) {
+                                once = false;
+                                running = false;
+                            }
+                        } else {
+                            try {
+                                Thread.sleep(100);
+                            } catch(InterruptedException ex) {
+                                Logger.getLogger(GUI.class.getName()).log(Level.WARNING, null, ex);
+                            }
+                        }
                     }
                 }
             };
+            running = true;
             run.start();
         } else {
-            run.resume();
+            running = true;
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        if(run != null) {
-            run.suspend();
-        }
+        running = false;
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
@@ -214,25 +293,17 @@ public class GUI extends javax.swing.JFrame {
             @Override
             public void run() {
                 new GUI().setVisible(true);
-                /*Heapsort h = new Heapsort(100, false);
-                int[] i = h.content.clone();
-                h.sort();
-                System.out.println(h.toString());
-                //Arrays.sort(i);
-                /*for(int a = 0; a < i.length; a++) {
-                    if(i[a] != h.content[a]) {
-                        System.out.print("shit " + a + " ");
-                    }
-                }*/
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox forwardBox;
     private heapsort.HeapView heapView1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JSlider jSlider1;
+    private heapsort.ArrayView rectPanel;
     private javax.swing.JTextField sizeField;
     private javax.swing.JButton submitButton;
     // End of variables declaration//GEN-END:variables

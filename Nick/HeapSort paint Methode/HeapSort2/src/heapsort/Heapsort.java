@@ -3,20 +3,11 @@ package heapsort;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- *
- * @author Patrick Robinson, Nick Herrmannsdörfer, Erwin Stamm
- */
 public class Heapsort {
     public int[] content;
     public ArrayList<Command> orders;
     private Random r;
-
-    /**
-     *
-     * @param n length of Array
-     * @param sorted
-     */
+    
     public Heapsort(int n, boolean sorted) {
         content = new int[n];
         if(sorted) {
@@ -32,12 +23,8 @@ public class Heapsort {
         orders = new ArrayList<Command>(n);
         orders.add(new Command(content, 0, n - 1, Instruction.Init));
     }
-
-    /**
-     *
-     * @return backtrace command list
-     */
-    public ArrayList<Command> sort() {
+    
+    public ArrayList<Command> sort() {        
         int start = (content.length - 2) / 2;
         int end = content.length - 1;
         while(start >= 0) {
@@ -53,13 +40,13 @@ public class Heapsort {
         orders.add(new Command(content, 0, content.length - 1, Instruction.End));
         return orders;
     }
-
+    
     private void swap(int a, int b) {
         int tmp = content[a];
         content[a] = content[b];
         content[b] = tmp;
     }
-
+    
     private void seep(int start, int end) {
         int parent = start;
         int tmp;
@@ -68,15 +55,12 @@ public class Heapsort {
             orders.add(new Command(content, parent, child, Instruction.ComparisonParent));
             if(content[parent] < content[child]) {
                 tmp = child;
+                orders.add(new Command(content, tmp, child + 1, Instruction.ComparisonFlat));
             } else {
                 tmp = parent;
+                orders.add(new Command(content, tmp, child + 1, Instruction.ComparisonParent));
             }
             if((child + 1 <= end) && (content[tmp] < content[child + 1])) {
-                if(tmp == parent) {
-                    orders.add(new Command(content, tmp, child + 1, Instruction.ComparisonParent));
-                } else {
-                    orders.add(new Command(content, tmp, child + 1, Instruction.ComparisonFlat));
-                }
                 tmp = child + 1;
             }
             if(tmp == parent) {
@@ -94,12 +78,7 @@ public class Heapsort {
     public String toString() {
         return toString(content);
     }
-
-    /**
-     *
-     * @param arr integer array to display
-     * @return String representation
-     */
+    
     public static String toString(int[] arr) {
         String result = "";
         for(int i = 0; i < arr.length; i++) {
@@ -107,4 +86,11 @@ public class Heapsort {
         }
         return result;
     }
+   
+   /* public static void main(String[] args) {
+        Heapsort h = new Heapsort(200, false); //10000000
+        System.out.print("Patrick: ");
+        System.out.println(h.sort());
+        System.out.println(h.orders);
+    }*/
 }

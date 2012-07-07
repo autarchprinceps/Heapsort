@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package heapsort;
 
 /**
  *
- * @author autarch
+ * @author Patrick Robinson, Nick Herrmannsdörfer, Erwin Stamm
  */
 public class Wrap {
     private Integer i;
