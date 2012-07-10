@@ -1,3 +1,5 @@
+import random
+
 def swap(a, b, l):
     tmp = l[a]
     l[a] = l[b]
@@ -32,8 +34,6 @@ def heapsort(x):
         end -= 1
         seep(0, end, x)
 
-l = [2, 4, 1, 5, 6, 7]
+l = [int(10000*random.random()) for i in xrange(100000)]
 
 heapsort(l)
-
-print(l)
