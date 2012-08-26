@@ -1,4 +1,4 @@
-def swap(a, b, l):
+﻿def swap(a, b, l):
     tmp = l[a]
     l[a] = l[b]
     l[b] = tmp
