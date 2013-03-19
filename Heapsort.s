@@ -57,7 +57,7 @@ jg if2end;
 movl (%%list, %%tmp), %%memoryAccessRestriction;
 cmp %%memoryAccessRestriction, (%%list, %%child);
 jge if2end;
-movl %%child,
+movl %%child, %%tmp;
 if2end:
 decl %%child;
 #endregion

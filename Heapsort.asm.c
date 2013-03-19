@@ -2,7 +2,8 @@
 
 void printList(long* list, long len) {
     printf("list(");
-    for(long i = 0; i < len; i++) {
+	long i;
+    for(i = 0; i < len; i++) {
         printf(" %ld ", list[i]);
     }
     printf(")\n");
@@ -13,7 +14,7 @@ void printList(long* list, long len) {
 int main() {
 	long l[len] = { 2, 4, 1, 5, 6, 7, 9, 20, -2, 54, 345, 43, 2, 5, 6, 3, 7, 345, 56, 7, 34, 654, 324, 6, 42, 4, 5 };
     printList(l, len);	
-	__asm__ (
+	asm (
 "													\n\
 movq %%rdx, %%r8;										\n\
 subq $2, %%r8;											\n\
@@ -57,7 +58,7 @@ jg if2end;													\n\
 movq (%%rcx, %%r15), %%r14;			\n\
 cmpq %%r14, (%%rcx, %%r13);			\n\
 jge if2end;													\n\
-movq %%r13,												\n\
+movq %%r13,	%%r15;											\n\
 if2end:														\n\
 decq %%r13;												\n\
 cmpq %%r15, %%r12;										\n\
@@ -80,7 +81,7 @@ ret;														\n\
 end_heapsort:"
 :
 :"c"(l), "d"(len)
-:"memory"
+:"memory", "%r8", "%r9", "%r10", "%r11", "%r12", "%r13", "%r14", "%r15"
 	);
 	printList(l, len);
 }
