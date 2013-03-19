@@ -12,9 +12,9 @@ void printList(long* list, long len) {
 #define len 27
 
 int main() {
-	long l[len] = { 2, 4, 1, 5, 6, 7, 9, 20, -2, 54, 345, 43, 2, 5, 6, 3, 7, 345, 56, 7, 34, 654, 324, 6, 42, 4, 5 };
+	long l[len] = { 2, 4, 1, 5, 6, 7, 9, 20, 2133, 54, 345, 43, 2, 5, 6, 3, 7, 345, 56, 7, 34, 654, 324, 6, 42, 4, 5 };
     printList(l, len);	
-	asm (
+	asm volatile (
 "													\n\
 movq %%rdx, %%r8;										\n\
 subq $2, %%r8;											\n\
