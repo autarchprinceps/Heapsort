@@ -12,9 +12,9 @@ def seep(start, end, l):
         if tmp == parent:
             break
         else:
-            l[parent], l[tmp] = l[tmp], l[parent];
+            l[parent], l[tmp] = l[tmp], l[parent]
             parent = tmp
-        child = parent * 2 + 1;
+        child = parent * 2 + 1
 
 def heapsort(l):
     start = (len(l) - 2) / 2
