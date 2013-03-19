@@ -1,8 +1,3 @@
-﻿def swap(a, b, l):
-    tmp = l[a]
-    l[a] = l[b]
-    l[b] = tmp
-
 def seep(start, end, l):
     parent = start
     tmp = -1
@@ -17,20 +12,20 @@ def seep(start, end, l):
         if tmp == parent:
             break
         else:
-            swap(parent, tmp, l)
+            l[parent], l[tmp] = l[tmp], l[parent];
             parent = tmp
         child = parent * 2 + 1;
 
-def heapsort(x):
-    start = (len(x) - 2) / 2
-    end = len(x) - 1
+def heapsort(l):
+    start = (len(l) - 2) / 2
+    end = len(l) - 1
     while start >= 0:
-        seep(start, end, x)
+        seep(start, end, l)
         start -= 1
     while end > 0:
-        swap(end, 0, x)
+        l[end], l[0] = l[0], l[end]
         end -= 1
-        seep(0, end, x)
+        seep(0, end, l)
 
 l = [2, 4, 1, 5, 6, 7, 9, 20, -2, 54, 345, 43, 2, 5, 6, 3, 7, 345, 56, 7, 34, 654, 324, 6, 42, 4, 5]
 
