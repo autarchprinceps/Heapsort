@@ -14,7 +14,7 @@ void printList(long* list, long len) {
 int main() {
 	long l[len] = { 2, 4, 1, 5, 6, 7, 9, 20, 2133, 54, 345, 43, 2, 5, 6, 3, 7, 345, 56, 7, 34, 654, 324, 6, 42, 4, 5 };
     printList(l, len);	
-	asm volatile (
+	asm (
 "													\n\
 movq %%rdx, %%r8;										\n\
 subq $2, %%r8;											\n\
@@ -42,10 +42,10 @@ movq %%r12, %%r13;										\n\
 salq $1, %%r13;											\n\
 incq %%r13;												\n\
 seep_while:													\n\
-cmp %%r13, %%r9;											\n\
+cmpq %%r13, %%r9;											\n\
 ret;				\n\
-movq (%%rcx, %%r12), %%r14;			\n\
-cmpq %%r14, (%%rcx, %%r13);			\n\
+movq (%%rcx, %%r12, 8), %%r14;			\n\
+cmpq %%r14, (%%rcx, %%r13, 8);			\n\
 jge if1else;												\n\
 movq %%r13, %%r15;										\n\
 jmp if1end;													\n\
@@ -55,8 +55,8 @@ if1end:														\n\
 incq %%r13;												\n\
 cmpq %%r13, %%r9;											\n\
 jg if2end;													\n\
-movq (%%rcx, %%r15), %%r14;			\n\
-cmpq %%r14, (%%rcx, %%r13);			\n\
+movq (%%rcx, %%r15, 8), %%r14;			\n\
+cmpq %%r14, (%%rcx, %%r13, 8);			\n\
 jge if2end;													\n\
 movq %%r13,	%%r15;											\n\
 if2end:														\n\
@@ -74,9 +74,9 @@ salq %%r13;												\n\
 incq %%r13;												\n\
 jmp seep_while;												\n\
 swap:														\n\
-movq (%%rcx, %%r10), %%r14;			\n\
-xchg %%r14, (%%rcx, %%r11);			\n\
-movq %%r14, (%%rcx, %%r10);			\n\
+movq (%%rcx, %%r10, 8), %%r14;			\n\
+xchg %%r14, (%%rcx, %%r11, 8);			\n\
+movq %%r14, (%%rcx, %%r10, 8);			\n\
 ret;														\n\
 end_heapsort:"
 :
