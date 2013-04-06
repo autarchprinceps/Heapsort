@@ -1,3 +1,4 @@
+#!/usr/bin/python
 def seep(start, end, l):
     parent = start
     tmp = -1
@@ -28,6 +29,7 @@ def heapsort(l):
         seep(0, end, l)
 
 l = [2, 4, 1, 5, 6, 7, 9, 20, -2, 54, 345, 43, 2, 5, 6, 3, 7, 345, 56, 7, 34, 654, 324, 6, 42, 4, 5]
+print(l)
 
 heapsort(l)
 
