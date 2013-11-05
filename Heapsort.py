@@ -1,4 +1,6 @@
 #!/usr/bin/python
+import random
+
 def seep(start, end, l):
     parent = start
     tmp = -1
@@ -28,9 +30,10 @@ def heapsort(l):
         end -= 1
         seep(0, end, l)
 
-l = [2, 4, 1, 5, 6, 7, 9, 20, -2, 54, 345, 43, 2, 5, 6, 3, 7, 345, 56, 7, 34, 654, 324, 6, 42, 4, 5]
-print(l)
+l = [random.randint(-1000,1000) for r in xrange(10000000)]
+# l = [2, 4, 1, 5, 6, 7, 9, 20, -2, 54, 345, 43, 2, 5, 6, 3, 7, 345, 56, 7, 34, 654, 324, 6, 42, 4, 5]
+# print(l)
 
 heapsort(l)
 
-print(l)
+# print(l)
