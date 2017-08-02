@@ -11,6 +11,7 @@ pipeline {
         parallel(
           "A": {
             echo 'A'
+            input(message: 'Hallo', id: 'H', ok: 'String')
             
           },
           "B": {
