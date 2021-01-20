@@ -20,7 +20,7 @@ def seep(start, end, l):
         child = parent * 2 + 1
 
 def heapsort(l):
-    start = (len(l) - 2) / 2
+    start = (len(l) - 2) // 2
     end = len(l) - 1
     while start >= 0:
         seep(start, end, l)
@@ -30,7 +30,7 @@ def heapsort(l):
         end -= 1
         seep(0, end, l)
 
-l = [random.randint(-1000,1000) for r in xrange(10000000)]
+l = [random.randint(-1000,1000) for r in range(10000000)]
 # l = [2, 4, 1, 5, 6, 7, 9, 20, -2, 54, 345, 43, 2, 5, 6, 3, 7, 345, 56, 7, 34, 654, 324, 6, 42, 4, 5]
 # print(l)
 
